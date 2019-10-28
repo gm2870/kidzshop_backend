@@ -18,10 +18,12 @@ class CreateOrdersTable extends Migration
             $table->string('hash');
             $table->float('total');
             $table->smallInteger('paid');
-            $table->unsignedBigInteger('costumer_id');
+            $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('address_id');
-            // $table->foreign('costumer_id')->references('id')->on('costumers');
-            // $table->foreign('address_id')->references('id')->on('addresses');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
+            $table->foreign('address_id')->references('id')->on('addresses')->onDelete('cascade');
+            $table->index('customer_id');
+            $table->index('address_id');
 
             $table->timestamps();
         });
@@ -34,6 +36,10 @@ class CreateOrdersTable extends Migration
      */
     public function down()
     {
+        Schema::table('orders', function (Blueprint $table) {
+            $table->dropForeign('customers_customer_id_foreign');
+            $table->dropForeign('addresss_address_id_foreign');
+        });
         Schema::dropIfExists('orders');
     }
 }

@@ -17,7 +17,11 @@ class CreateCartsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('product_id');
-            $table->timestamps('expired_at');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->index('user_id');
+            $table->index('product_id');
+
             $table->timestamps();
         });
     }
@@ -29,6 +33,10 @@ class CreateCartsTable extends Migration
      */
     public function down()
     {
+        Schema::table('carts', function (Blueprint $table) {
+            $table->dropForeign('users_user_id_foreign');
+            $table->dropForeign('products_product_id_foreign');
+        });
         Schema::dropIfExists('carts');
     }
 }

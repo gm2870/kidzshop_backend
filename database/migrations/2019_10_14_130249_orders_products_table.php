@@ -16,9 +16,12 @@ class OrdersProductsTable extends Migration
         Schema::create('orders_products', function (Blueprint $table) {
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('product_id');
-            $table->foreign('order_id')->references('id')->on('orders');
-            $table->foreign('product_id')->references('id')->on('products');
             $table->integer('quantity');
+
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
+            $table->index('order_id');
+            $table->index('product_id');
         });
     }
 
@@ -29,6 +32,9 @@ class OrdersProductsTable extends Migration
      */
     public function down()
     {
+        Schema::table('orders_products', function (Blueprint $table) {
+            $table->dropForeign('orders_order_id_foreign');
+        });
         Schema::dropIfExists('orders_products');
     }
 }
