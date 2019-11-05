@@ -13,14 +13,9 @@
 // Route::view('/{path?}', 'app')->where('path', '.*')->name('react');
 
 Auth::routes();
-
 Route::get('/', 'HomeController@index')->name('home');
-Route::post('logout', 'Auth\LogoutController@index');
-
-Auth::routes();
-
-Route::get('/home', 'HomeController@index')->name('home');
-
-Auth::routes();
+// Route::post('logout', 'Auth\LogoutController@index');
+Route::get('logout', 'Auth\LogoutController@index')->name('logout');
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('{path}', 'HomeController@index')->where('path', '.*');

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
+use Auth;
 
 class RegisterController extends Controller
 {
@@ -43,28 +44,34 @@ class RegisterController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $this->validate($request, [
             'username' => ['required', 'string', 'max:255', 'unique:users'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
         ]);
+        // $validator = Validator::make($request->all(), [
+        //     'username' => ['required', 'string', 'max:255', 'unique:users'],
+        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        //     'password' => ['required', 'string', 'min:6'],
+        // ]);
 
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->messages()]);
-        } else {
-            $user = User::create([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => Hash::make($request->password),
-            ]);
-            $session_id = session()->getId();
-            return response()->json([
-                'status' => 'true',
-                'username' => $request->username,
-                'userId' => $user->id,
-                'sessionId' => $session_id
+        // if ($validator->fails()) {
+        //     return response()->json(['message' => $validator->messages()]);
+        // } else {
+        $user = User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        Auth::login($user, true);
+        $session_id = session()->getId();
+        return response()->json([
+            'status' => 'true',
+            'username' => $request->username,
+            'userId' => $user->id,
+            'sessionId' => $session_id
 
-            ]);
-        }
+        ]);
+        //}
     }
 }

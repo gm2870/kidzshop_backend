@@ -1,0 +1,98 @@
+@font-face {
+    font-family: "Vazir";
+    src: url("../vazir-font/Vazir.ttf");
+    src: url("../vazir-font/Vazir.woff");
+}
+body {
+    font-family: "Vazir", sans-serif !important;
+    height: 100vh !important;
+    direction: rtl;
+}
+
+#app {
+    background: #d2d6de;
+    height: 100%;
+}
+.brand-link {
+    text-align: center;
+    display: flex;
+}
+.login-logo {
+    a {
+        text-decoration: none;
+        strong {
+            font-weight: bold;
+        }
+    }
+}
+.form-group {
+    position: relative;
+    input {
+        text-align: right;
+    }
+    i {
+        position: absolute;
+        top: 7px;
+        left: 10px;
+    }
+}
+.content-wrapper {
+    margin-top: -50px;
+    padding-top: 50px;
+    margin-left: unset;
+    margin-right: 250px;
+}
+.nav-link {
+    text-align: right;
+}
+.nav-sidebar {
+    padding-right: 0;
+
+    .nav-link {
+        display: flex;
+        align-items: center;
+        i {
+            margin-left: 5px;
+        }
+    }
+}
+.card-header {
+    .card-title {
+        float: right;
+        margin-bottom: 0;
+        margin-top: 10px;
+    }
+    .card-tools {
+        float: left;
+    }
+}
+.table {
+    tr {
+        th,
+        td {
+            text-align: center;
+        }
+        td {
+            vertical-align: baseline !important;
+        }
+    }
+}
+.main-header {
+    margin-left: unset;
+    margin-right: 250px;
+}
+.productPhoto {
+    display: flex;
+    justify-content: space-between;
+    text-align: right;
+    color: gray;
+    border: 1px solid lightgray;
+    border-radius: 3px;
+    padding: 6px 3px 3px;
+    input {
+        direction: ltr;
+    }
+    label {
+        font-weight: 300 !important;
+    }
+}

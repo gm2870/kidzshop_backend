@@ -6,6 +6,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://kit.fontawesome.com/6213d3caae.js" crossorigin="anonymous"></script>
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
