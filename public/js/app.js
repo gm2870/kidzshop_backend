@@ -2879,6 +2879,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2887,6 +2901,8 @@ __webpack_require__.r(__webpack_exports__);
       form: new Form({
         id: "",
         name: "",
+        category_id: "",
+        description: "",
         price: "",
         quantity: "",
         photo: ""
@@ -2929,9 +2945,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       this.$Progress.start();
-      this.form.put("api/products/".concat(this.form.id)).then(function () {
+      this.form.put("api/products/".concat(this.form.id)).then(function (response) {
+        console.log(response);
         $("#addNew").modal("hide");
-        Swal.fire("Updated!", "info has been updated.", "success");
+
+        if (response.data.status === "true") {
+          Swal.fire("ویرایش شد!", "اطلاعات ویرایش شدند.", "success");
+        } else Swal.fire("آخ...!", "اطلاعات ویرایش نشدند.", "error");
 
         _this3.$Progress.finish();
 
@@ -2944,6 +2964,7 @@ __webpack_require__.r(__webpack_exports__);
       this.editMode = true;
       this.form.reset();
       $("#addNew").modal("show");
+      console.log(product);
       this.form.fill(product);
     },
     newModal: function newModal() {
@@ -2955,21 +2976,22 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
 
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "آیا مطمئن هستید؟",
+        text: "این عملیات غیر قابل بازگشت میباشد!",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+        confirmButtonText: "بله, حذف کن!",
+        cancelButtonText: "انصراف"
       }).then(function (result) {
         // send request to the server
         if (result.value) {
           _this4.form["delete"]("api/products/".concat(id)).then(function () {
-            Swal.fire("Deleted!", "the product has been deleted.", "success");
+            Swal.fire("حذف شد!", "محصول با موفقیت حذف شد.", "success");
             Fire.$emit("afterProductCreated");
           })["catch"](function (error) {
-            Swal.fire("Failed!", "the user has not been deleted.", "warning");
+            Swal.fire("ناموفق!", "محصول حذف نشد.", "warning");
           });
         }
       });
@@ -63014,6 +63036,8 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(product.category_name))]),
+                        _vm._v(" "),
                         _c("td", [
                           _vm._v(
                             _vm._s(_vm._f("beautifyDate")(product.created_at))
@@ -63263,6 +63287,116 @@ var render = function() {
                     _vm._v(" "),
                     _c(
                       "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c(
+                          "select",
+                          {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.form.category_id,
+                                expression: "form.category_id"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            class: {
+                              "is-invalid": _vm.form.errors.has("category_id")
+                            },
+                            attrs: { name: "category_id" },
+                            on: {
+                              change: function($event) {
+                                var $$selectedVal = Array.prototype.filter
+                                  .call($event.target.options, function(o) {
+                                    return o.selected
+                                  })
+                                  .map(function(o) {
+                                    var val = "_value" in o ? o._value : o.value
+                                    return val
+                                  })
+                                _vm.$set(
+                                  _vm.form,
+                                  "category_id",
+                                  $event.target.multiple
+                                    ? $$selectedVal
+                                    : $$selectedVal[0]
+                                )
+                              }
+                            }
+                          },
+                          [
+                            _c(
+                              "option",
+                              {
+                                attrs: { value: "", selected: "", disabled: "" }
+                              },
+                              [_vm._v("دسته بندی")]
+                            ),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "1" } }, [
+                              _vm._v("اسباب بازی")
+                            ]),
+                            _vm._v(" "),
+                            _c("option", { attrs: { value: "2" } }, [
+                              _vm._v("لباس")
+                            ])
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "category_id" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-group" },
+                      [
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.form.description,
+                              expression: "form.description"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid": _vm.form.errors.has("description")
+                          },
+                          attrs: {
+                            placeholder: "توضیحات",
+                            type: "text",
+                            name: "description"
+                          },
+                          domProps: { value: _vm.form.description },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.form,
+                                "description",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("has-error", {
+                          attrs: { form: _vm.form, field: "description" }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
                       { staticClass: "form-group productPhoto" },
                       [
                         _c("label", { attrs: { for: "photo" } }, [
@@ -63356,6 +63490,8 @@ var staticRenderFns = [
         _c("th", [_vm._v("موجودی")]),
         _vm._v(" "),
         _c("th", [_vm._v("عکس")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("دسته بندی")]),
         _vm._v(" "),
         _c("th", [_vm._v("زمان ایجاد")]),
         _vm._v(" "),

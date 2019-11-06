@@ -22,6 +22,7 @@
                   <th>قیمت</th>
                   <th>موجودی</th>
                   <th>عکس</th>
+                  <th>دسته بندی</th>
                   <th>زمان ایجاد</th>
                   <th>ویرایش</th>
                 </tr>
@@ -35,6 +36,7 @@
                   <td>
                     <img :src="'/images/'+product.photo" alt style="width:50px" />
                   </td>
+                  <td>{{product.category_name }}</td>
                   <td>{{product.created_at | beautifyDate }}</td>
                   <td>
                     <a href="#" @click="editModal(product)">
@@ -116,7 +118,30 @@
                 />
                 <has-error :form="form" field="quantity"></has-error>
               </div>
-
+              <div class="form-group">
+                <select
+                  v-model="form.category_id"
+                  name="category_id"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.has('category_id') }"
+                >
+                  <option value selected disabled>دسته بندی</option>
+                  <option value="1">اسباب بازی</option>
+                  <option value="2">لباس</option>
+                </select>
+                <has-error :form="form" field="category_id"></has-error>
+              </div>
+              <div class="form-group">
+                <textarea
+                  placeholder="توضیحات"
+                  v-model="form.description"
+                  type="text"
+                  name="description"
+                  class="form-control"
+                  :class="{ 'is-invalid': form.errors.has('description') }"
+                ></textarea>
+                <has-error :form="form" field="description"></has-error>
+              </div>
               <div class="form-group productPhoto">
                 <label for="photo">عکس محصول</label>
                 <input
@@ -128,17 +153,6 @@
                 />
                 <has-error :form="form" field="photo"></has-error>
               </div>
-              <!-- <div class="form-group">
-                                <input
-                                    placeholder="password"
-                                    v-model="form.password"
-                                    type="password"
-                                    name="password"
-                                    class="form-control"
-                                    :class="{ 'is-invalid': form.errors.has('password') }"
-                                />
-                                <has-error :form="form" field="password"></has-error>
-              </div>-->
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-danger" data-dismiss="modal">بستن</button>
@@ -161,6 +175,8 @@ export default {
       form: new Form({
         id: "",
         name: "",
+        category_id: "",
+        description: "",
         price: "",
         quantity: "",
         photo: ""
@@ -195,9 +211,14 @@ export default {
       this.$Progress.start();
       this.form
         .put(`api/products/${this.form.id}`)
-        .then(() => {
+        .then(response => {
+          console.log(response);
           $("#addNew").modal("hide");
-          Swal.fire("Updated!", "info has been updated.", "success");
+
+          if (response.data.status === "true") {
+            Swal.fire("ویرایش شد!", "اطلاعات ویرایش شدند.", "success");
+          } else Swal.fire("آخ...!", "اطلاعات ویرایش نشدند.", "error");
+
           this.$Progress.finish();
           Fire.$emit("afterProductCreated");
         })
@@ -209,6 +230,7 @@ export default {
       this.editMode = true;
       this.form.reset();
       $("#addNew").modal("show");
+      console.log(product);
       this.form.fill(product);
     },
     newModal() {
@@ -218,24 +240,25 @@ export default {
     },
     deleteProduct(id) {
       Swal.fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
+        title: "آیا مطمئن هستید؟",
+        text: "این عملیات غیر قابل بازگشت میباشد!",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+        confirmButtonText: "بله, حذف کن!",
+        cancelButtonText: "انصراف"
       }).then(result => {
         // send request to the server
         if (result.value) {
           this.form
             .delete(`api/products/${id}`)
             .then(() => {
-              Swal.fire("Deleted!", "the product has been deleted.", "success");
+              Swal.fire("حذف شد!", "محصول با موفقیت حذف شد.", "success");
               Fire.$emit("afterProductCreated");
             })
             .catch(error => {
-              Swal.fire("Failed!", "the user has not been deleted.", "warning");
+              Swal.fire("ناموفق!", "محصول حذف نشد.", "warning");
             });
         }
       });
