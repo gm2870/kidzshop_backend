@@ -17,11 +17,11 @@ class CreateCartsTable extends Migration
             $table->bigIncrements('id');
             $table->unsignedBigInteger('user_id')->nullable();
             $table->unsignedBigInteger('product_id');
+            $table->integer('quantity');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->index('user_id');
             $table->index('product_id');
-
             $table->timestamps();
         });
     }

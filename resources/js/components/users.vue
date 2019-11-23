@@ -224,6 +224,15 @@ export default {
       });
     },
     loadUsers() {
+      Axios.post(
+        `CheckLoginStatus`,
+        {},
+        {
+          withCredentials: true
+        }
+      ).then(response => {
+        console.log(response);
+      });
       //if (this.$gate.isAdminOrAuthor()) {
       axios.get("api/users").then(({ data }) => (this.users = data));
       //}

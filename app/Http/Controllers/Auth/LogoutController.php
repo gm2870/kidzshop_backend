@@ -9,9 +9,12 @@ use Illuminate\Support\Facades\Session;
 
 class LogoutController extends Controller
 {
-    public function index()
+    public function logout(Request $request)
     {
-        Auth::logout();
-        return redirect()->route('login');
+        $request->user()->token()->revoke();
+        return response()->json([
+            'status' => 'true',
+            'message' => 'Successfully logged out'
+        ]);
     }
 }

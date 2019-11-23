@@ -126,14 +126,20 @@ const app = new Vue({
 
 $('#login_btn').on('click', e => {
     e.preventDefault();
+    
     const data = {
         username:$('#username').val(),
         password:$('#password').val()
     };
-    Axios.post('/login',data).then(response => {
+    Axios.post('/api/login',data,{headers:{
+        "Content-Type": "application/json",
+        'X-Requested-With' : 'XMLHttpRequest',
+        'Accept': 'application/json'
+    }}).then(response => {
         if(response.data.status === 'true') {
-            location = '/dasboard'
-        }
+            location = '/home'
+            // console.log(response)
+        }else alert('f')
     }).catch(err => console.log(err));
 });
 $('#register_btn').on('click', e => {
@@ -145,9 +151,9 @@ $('#register_btn').on('click', e => {
         password_confirm:$('#password-confirm')
 
     };
-    Axios.post('/register',data).then(response => {
+    Axios.post('/api/register',data,{headers:{'Accept': 'application/json'}}).then(response => {
         if(response.data.status === 'true') {
-            location = '/dasboard'
+            console.log(response)
         }
     }).catch(err => console.log(err));
 });

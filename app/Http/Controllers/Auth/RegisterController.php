@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use Laravel\Passport\HasApiTokens;
+
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
@@ -49,29 +51,23 @@ class RegisterController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:6'],
         ]);
-        // $validator = Validator::make($request->all(), [
-        //     'username' => ['required', 'string', 'max:255', 'unique:users'],
-        //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-        //     'password' => ['required', 'string', 'min:6'],
-        // ]);
 
-        // if ($validator->fails()) {
-        //     return response()->json(['message' => $validator->messages()]);
-        // } else {
         $user = User::create([
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
         Auth::login($user, true);
-        $session_id = session()->getId();
         return response()->json([
             'status' => 'true',
             'username' => $request->username,
             'userId' => $user->id,
-            'sessionId' => $session_id
-
+            'access_token' => $tokenResult->accessToken,
+            'expires_at' => Carbon::parse(
+                $tokenResult->token->expires_at
+            )->toDateTimeString()
         ]);
-        //}
     }
 }

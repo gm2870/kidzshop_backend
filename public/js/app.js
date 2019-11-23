@@ -3582,7 +3582,12 @@ __webpack_require__.r(__webpack_exports__);
     loadUsers: function loadUsers() {
       var _this4 = this;
 
-      //if (this.$gate.isAdminOrAuthor()) {
+      Axios.post("CheckLoginStatus", {}, {
+        withCredentials: true
+      }).then(function (response) {
+        console.log(response);
+      }); //if (this.$gate.isAdminOrAuthor()) {
+
       axios.get("api/users").then(function (_ref) {
         var data = _ref.data;
         return _this4.users = data;
@@ -79660,10 +79665,16 @@ $('#login_btn').on('click', function (e) {
     username: $('#username').val(),
     password: $('#password').val()
   };
-  axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/login', data).then(function (response) {
-    if (response.data.status === 'true') {
-      location = '/dasboard';
+  axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/login', data, {
+    headers: {
+      "Content-Type": "application/json",
+      'X-Requested-With': 'XMLHttpRequest',
+      'Accept': 'application/json'
     }
+  }).then(function (response) {
+    if (response.data.status === 'true') {
+      location = '/home'; // console.log(response)
+    } else alert('f');
   })["catch"](function (err) {
     return console.log(err);
   });
@@ -79676,9 +79687,13 @@ $('#register_btn').on('click', function (e) {
     password: $('#password').val(),
     password_confirm: $('#password-confirm')
   };
-  axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/register', data).then(function (response) {
+  axios__WEBPACK_IMPORTED_MODULE_0___default.a.post('/api/register', data, {
+    headers: {
+      'Accept': 'application/json'
+    }
+  }).then(function (response) {
     if (response.data.status === 'true') {
-      location = '/dasboard';
+      console.log(response);
     }
   })["catch"](function (err) {
     return console.log(err);
